@@ -131,6 +131,11 @@ IP_PATTERN = re.compile(
     r"(?![\d.])"
 )
 
+PAN_PATTERN = re.compile(
+    r"(?<![A-Z0-9])"
+    r"[A-Z]{5}[0-9]{4}[A-Z]"
+    r"(?![A-Z0-9])"
+)
 
 def normalize_digits(value):
     return re.sub(r"\D", "", value)
@@ -180,6 +185,18 @@ def detect_ip_addresses(text):
     for match in IP_PATTERN.finditer(text):
         results.append({
             "type": "IP_ADDRESS",
+            "text": match.group(),
+            "start": match.start(),
+            "end": match.end()
+        })
+
+
+def detect_pans(text):
+    results = []
+
+    for match in PAN_PATTERN.finditer(text):
+        results.append({
+            "type": "PAN",
             "text": match.group(),
             "start": match.start(),
             "end": match.end()
